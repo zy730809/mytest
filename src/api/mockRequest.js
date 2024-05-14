@@ -5,13 +5,13 @@ import nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
 // start:进度条开始  done:进度条结束
 
-const requests = axios.create({
-    baseURL:'/api',
+const mockRequests = axios.create({
+    baseURL:'/mock',
     timeout:5000
 })
 
 // 设置请求拦截器
-requests.interceptors.request.use((config)=>{
+mockRequests.interceptors.request.use((config)=>{
     nprogress.start();
     return config;
 
@@ -19,7 +19,7 @@ requests.interceptors.request.use((config)=>{
 
 })
 // 设置响应拦截器
-requests.interceptors.response.use(response=>{
+mockRequests.interceptors.response.use(response=>{
     // 进度条的设计
     // 当数据返回的时候可以执行进度条操作
     nprogress.done();
@@ -28,5 +28,4 @@ requests.interceptors.response.use(response=>{
 },error=>{
 
 })
-// 暴露封装后的axios
-export default requests
+export default mockRequests

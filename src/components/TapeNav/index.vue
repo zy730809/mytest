@@ -89,7 +89,7 @@ export default{
         // }
         // 改写成ES5格式，调用_.throttle()函数实现节流操作
         changeIndex:_.throttle(function(index){
-            this.currentIndex = index
+            this.currentIndex = index;
         },50),
         // 页面跳转及传参
         goSearch(event){
@@ -108,9 +108,14 @@ export default{
                 }else{
                     query.category3id = category3id;
                 }
-                location.query = query;
-                this.$router.push(location);
+                if(this.$route.params){
+                    location.params = this.$route.params;
+                    location.query = query;
+                    this.$router.push(location);
+                }
             }
+            console.log(this)
+            console.log(event);
             console.log(event.target);
             console.log(element.dataset);
             console.log(location);
@@ -131,7 +136,6 @@ export default{
      * 通知vuex发送请求，获取数据，将其存储到仓库中;
     */ 
     mounted(){
-        this.$store.dispatch('CateGoryList');
         // 组件一挂载完毕就将show设置为false(但是前提是当前页面不是home页面)
         if(this.$route.path != '/home'){
             this.show = false;
@@ -182,7 +186,7 @@ export default{
                     color: #333;
                 }
             }
-            
+
             .sort {
                 position: absolute;
                 left: 0;

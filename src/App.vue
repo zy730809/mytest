@@ -18,6 +18,10 @@ export default {
   components:{
     Header,
     Footer
+  },
+  // 组件一挂载就会执行,且只会执行一次
+  mounted(){
+    this.$store.dispatch('CateGoryList');
   }
 }
 

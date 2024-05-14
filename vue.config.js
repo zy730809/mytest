@@ -11,7 +11,12 @@ module.exports = defineConfig({
         target:'http://gmall-h5-api.atguigu.cn',
       }
     }
-  }
+  },
 })
-
+// //打包配置文件,vue 脚手架内部已经配置好了 webpack
+// module.exports = {
+//   assetsDir: 'static',
+//   parallel: false,
+//   publicPath: './',
+// };
 

@@ -3,29 +3,31 @@
 <div class="list-container">
             <div class="sortList clearfix">
                 <div class="center">
-                    <!--banner轮播-->
-                    <div class="swiper-container" id="mySwiper">
+                    <!--banner轮播-动态-->
+                    <div class="swiper-container" id="mySwiper" ref="mySwiper">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img src="./images/banner1.jpg" />
+                            <div class="swiper-slide" v-for="(carousel,index) in bannerList" :key="carousel.id">
+                                <img :src="carousel.imgUrl"/>
                             </div>
-                            <!-- <div class="swiper-slide">
-                                <img src="./images/banner2.jpg" />
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/banner3.jpg" />
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/banner4.jpg" />
-                            </div> -->
                         </div>
                         <!-- 如果需要分页器 -->
                         <div class="swiper-pagination"></div>
-
                         <!-- 如果需要导航按钮 -->
                         <div class="swiper-button-prev"></div>
                         <div class="swiper-button-next"></div>
                     </div>
+
+                    <!--banner轮播图-静态-->
+                    <!-- <div class="swiper-container" id="mySwiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="/images/banner2.jpg" />
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div> -->
                 </div>
                 <div class="right">
                     <div class="news">
@@ -110,8 +112,78 @@
 </div>
 </template>
 <script>
+import {mapState} from 'vuex';
+import Swiper from 'swiper';
 export default{
-    name:'ListContainer'
+    name:'ListContainer',
+    // 组件已挂载就应该向mock数据发送请求
+    async mounted(){
+        await this.$store.dispatch('getBannerList');
+        // =============实例化swiper1----使用定时器构建异步语句
+        // setTimeout(()=>{
+        //     var mySwiper = new Swiper (document.querySelector(".swiper-container"), {
+        //         // Swiper 轮播图的默认切换方向是水平方向
+        //         // direction: 'vertical', // 垂直切换选项
+        //         loop: true, // 循环模式选项
+        //         // 如果需要分页器
+        //         pagination: {
+        //             el: '.swiper-pagination',
+        //         },
+        //         // 如果需要前进后退按钮
+        //         navigation: {
+        //             nextEl: '.swiper-button-next',
+        //             prevEl: '.swiper-button-prev',
+        //         },
+        //         // 如果需要滚动条
+        //         scrollbar: {
+        //             el: '.swiper-scrollbar',
+        //         }
+        //     }) 
+        // },2000)
+
+        // =============实例化swiper2-----使用[await + async]实现异步操作
+        var mySwiper = new Swiper (document.querySelector(".swiper-container"), {
+            loop: true, // 循环模式选项
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        })         
+    },
+    // 组件身上已经绑定数据bannerList,可以直接调用
+    computed:{
+        ...mapState({
+            bannerList:(state)=>state.home.bannerList
+        })
+    },
+    // =========实例化swiper3(最终解决方案)-------使用[watch + $nextTick]实现异步操作
+    watch:{
+        bannerList:{
+            handler(newValue,oldValue){
+                this.$nextTick(()=>{
+                    // 使用原生JS方法获取DOM元素:document.querySelector(".swiper-container")
+                    // 这里使用vue的ref属性获取dom元素
+                    var mySwiper = new Swiper (this.$refs.mySwiper, {
+                        loop: true, // 循环模式选项
+                        // 如果需要分页器
+                        pagination: {
+                            el: '.swiper-pagination',
+                        },
+                        // 如果需要前进后退按钮
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                    })
+                })
+            }
+        }
+    }
 }
 </script>
 <style scoped lang="less">

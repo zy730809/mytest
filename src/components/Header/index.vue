@@ -78,11 +78,11 @@
 
                 // 第三种：对象式写法(需要为路由命名，querry参数+params参数)-----实际项目中比较常用的方法
                 // 在传递两个参数()=>{},()=>{}即可解决编程式导航
-                this.$router.push({
-                    name:'search',
-                    params:{keyword:this.keyword},
-                    query:{k:this.keyword.toUpperCase()}
-                })
+                if(this.$route.query){
+                    let location = {name:'search',params:{keyword:this.keyword}}
+                    location.query = this.$route.query;
+                    this.$router.push(location)
+                }
             }
         }
     }
